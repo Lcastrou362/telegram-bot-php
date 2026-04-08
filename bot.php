@@ -1,41 +1,66 @@
 <?php
-$token ="8758552882:AAF5I3hLztmAOkik281YKj-IQGoFxBSCSOU";
+
+$token = "8758552882:AAF5I3hLztmAOkik281YKj-IQGoFxBSCSOU";
+
 $input = file_get_contents("php://input");
 $update = json_decode($input, true);
 
-$chat_id = $update["message"]["chat"]["id"];
-$text=strtolower($update["message"]["text"]);
+if(!isset($update["message"])) {
+    exit;
+}
 
-$respuesta="No entiendo";
+$chat_id = $update["message"]["chat"]["id"];
+$text = strtolower(trim($update["message"]["text"]));
+
+$respuesta = "";
 
 switch($text) {
+
     case "/start":
-        $respuesta = "Hola! Soy tu bot 🤖";
+        $respuesta = "Hola! Soy tu bot 🤖 para ayudarte a encontrar productos del supermercado.\nEscribe 'ayuda' para comenzar o 'salir' para terminar.";
         break;
 
-    case "hola":
-        $respuesta = "Hola, ¿cómo estás?";
+    case "ayuda":
+        $respuesta = "¿Qué producto buscas?\nCarne, Queso, Jamon, Leche, Yogurth, Cereal, Bebidas, Jugos, Pan, Pasteles, Tortas, Detergente, Lavaloza";
         break;
 
-    case "adios":
-        $respuesta = "Chao 👋";
+    case "carne":
+    case "queso":
+    case "jamon":
+        $respuesta = "Pasillo 1";
         break;
 
-    case "menu":
-        $respuesta = "Opciones:\n1. hola\n2. adios\n3. info";
+    case "leche":
+    case "yogurth":
+    case "cereal":
+        $respuesta = "Pasillo 2";
         break;
 
-    case "info":
-        $respuesta = "Soy un bot creado en PHP 🚀";
+    case "bebidas":
+    case "jugos":
+        $respuesta = "Pasillo 3";
+        break;
+
+    case "pan":
+    case "pasteles":
+    case "tortas":
+        $respuesta = "Pasillo 4";
+        break;
+
+    case "detergente":
+    case "lavaloza":
+        $respuesta = "Pasillo 5";
+        break;
+
+    case "salir":
+        $respuesta = "Gracias por usar el bot 👋";
         break;
 
     default:
-        $respuesta = "No entiendo 😅 escribe 'menu'";
+        $respuesta = "No entiendo 😅 escribe 'ayuda'";
         break;
 }
 
-$url = "https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id&text=".urlencode($respuesta);
-
-file_get_contents($url);
+file_get_contents("https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id&text=" . urlencode($respuesta));
 
 ?>
